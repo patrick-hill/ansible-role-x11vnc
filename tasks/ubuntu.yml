@@ -1,0 +1,19 @@
+---
+- name: Install
+  apt: pkg={{item}} state=installed  update_cache=yes
+  with_items:
+        - x11vnc
+
+- name: Set default password
+  shell: x11vnc -storepasswd "{{ vnc_password }}" "{{ x11_pass_path }}"
+  sudo: yes
+
+- name: Add service
+  template: src=x11vnc.service.j2
+            dest=/lib/systemd/system/x11vnc.service
+            owner=root group=root mode=0644
+
+- name:     Enable service
+  service:  name=x11vnc.service enabled=yes state=started
+
+

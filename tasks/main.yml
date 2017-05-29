@@ -1,0 +1,10 @@
+---
+- name: Check if installed
+  command: dpkg-query -W x11vnc
+  register: deb_check
+  failed_when: deb_check.rc > 1
+  changed_when: deb_check.rc == 1
+
+- name: Ubuntu install
+  include: "ubuntu.yml"
+  when: ansible_distribution in [ "Ubuntu", "Linuxmint" ] and deb_check.rc == 1
